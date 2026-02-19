@@ -5,7 +5,6 @@ from threading import Thread
 import os
 import asyncio
 
-os.system('pip install duckduckgo-search')
 from duckduckgo_search import AsyncDDGS
 from bs4 import BeautifulSoup
 import dateparser
@@ -80,9 +79,7 @@ def prayer(s):
   return jsonify(data)
 
 
-def run():
-  app.run(host='0.0.0.0', port=7000)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
 
-
-t = Thread(target=run)
-t.start()
