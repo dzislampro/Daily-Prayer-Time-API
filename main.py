@@ -3,9 +3,8 @@ from flask import Flask, jsonify
 from flask_cors import CORS, cross_origin
 from threading import Thread
 import os
-import asyncio
 
-from duckduckgo_search import AsyncDDGS
+from duckduckgo_search import DDGS
 from bs4 import BeautifulSoup
 import dateparser
 
@@ -15,10 +14,10 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['JSON_SORT_KEYS'] = False
 
 
-async def aget_results(query):
-  addgs = AsyncDDGS(proxies=None)
-  results = await addgs.text(query, max_results=2)
-  return results
+def get_results(query):
+    with DDGS() as ddgs:
+        results = list(ddgs.text(query, max_results=2))
+    return results
 
 
 @app.route('/')
@@ -29,14 +28,13 @@ def home():
 @app.route('/api/<string:s>', methods=['GET'])
 @cross_origin(origin='*')
 def prayer(s):
-  loop = asyncio.new_event_loop()
-  asyncio.set_event_loop(loop)
+
 
   query = str(s + " prayer time site:muslimpro.com")
   data = {}
 
   # Run the asynchronous function in the event loop
-  urls = loop.run_until_complete(aget_results(query))
+urls = get_results(query)
 
   try:
     url = urls[0]['href']
@@ -75,7 +73,6 @@ def prayer(s):
     print(e)
     data["Error"] = "Result Not Found"
 
-  loop.close()
   return jsonify(data)
 
 
