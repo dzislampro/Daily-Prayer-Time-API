@@ -2,6 +2,6 @@ flask
 flask-cors
 requests
 beautifulsoup4
-duckduckgo-search
+duckduckgo-search==3.8.5
 dateparser
 gunicorn
