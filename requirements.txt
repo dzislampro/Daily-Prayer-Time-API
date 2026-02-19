@@ -1,5 +1,5 @@
 flask
 flask-cors
-adhan-python
+adhan
 pytz
 gunicorn
